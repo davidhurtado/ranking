@@ -57,7 +57,7 @@ class User {
 
             $_SESSION["logged"] = true;
             $_SESSION["id"] = $datauser["u_id"];
-
+            $_SESSION["user"] = $datauser["u_nick"];
             $this->logged = true;
 
             $this->data = (object) $datauser;
@@ -66,7 +66,7 @@ class User {
                 $G->menu_principal = "admin/menu_admin.phtml";
             } else
             if ($this->data->u_tipo == 3) {
-                $G->menu_principal = "admin/menu_user.phtml";
+                $G->menu_principal = "participantes/menu_user.phtml";
             }
         }
     }
@@ -84,7 +84,7 @@ class User {
                 $array_where = array(intval($id));
             $query_exist = $this->db->prepare("SELECT * FROM " . DB_PREFIX . "usuarios WHERE u_id = ?");
             $query_exist->execute($array_where);
-        }
+        }                                  
         return ( $query_exist->rowCount() ? $query_exist->fetch(PDO::FETCH_ASSOC) : false );
     }
 
@@ -93,7 +93,6 @@ class User {
         $_SESSION["logged"] = false;
         $_SESSION["id"] = null;
         session_destroy();
-
         $this->logged = false;
         redirectTo("home");
     }
