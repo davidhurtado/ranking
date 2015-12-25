@@ -10,6 +10,9 @@
         <?php echo strtoupper($G->act) . ' | '; ?> PREGUNTAS 
     </h1>
 </section>
+<link rel="stylesheet" href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "token-input.css" ?>">
+<script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "jquery.tokeninput.js" ?>" type="text/javascript"></script>
+
 <section class="content">
 
     <div class="box box-danger">
@@ -27,23 +30,23 @@
                         <div class="form-group form-group-sm">
                             <label for="pregunta" class="col-lg-2 control-label">Pregunta</label>
                             <div class="col-lg-10">
-                                  <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="pregunta" name="pregunta" placeholder="Ingrese la pregunta" required></textarea>
+                                <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="pregunta" name="pregunta" placeholder="Ingrese la pregunta" required></textarea>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="descripcion" class="col-lg-2 control-label">Descripci&oacute;n</label>
                             <div class="col-lg-10">
-                                  <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripci&oacute;n" required></textarea>
+                                <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripci&oacute;n" required></textarea>
                             </div>
                         </div>
-                         <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregaropciones">A&ntilde;adir Opcion</a>
+                        <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregaropciones" onclick="ocultar_mensaje()">A&ntilde;adir Opcion</a>
                         <div class="form-group form-group-sm">
                             <label for="opciones" class="col-lg-2 control-label">Opciones</label>
                             <div class="col-lg-10">
-                                <input multiple="multiple" id="opciones" name="opciones[]" type="text" class="form-control" placeholder="Ingrese opciones de respuestas" required>
+                                <input id="token-input-opciones" name="token-input-opciones" type="text" class="form-control" placeholder="Ingrese opciones de respuestas" required>
                             </div>
                         </div>
-                         
+                        <a class="btn btn-success btn-xs" onclick="imprimir()">Imprimir</a>
                         <div class="form-group form-group-sm">
                             <label for="respuesta" class="col-lg-2 control-label">Respuesta</label>
                             <div class="col-lg-10">
@@ -92,28 +95,75 @@
                     </div>
                 </form>
             </div>
-        <!-- MODAL AGREGAR RESPUESTAS-->
-                  <div class="modal fade" id="agregaropciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                  <h4 class="modal-title" id="myModalLabel">Agregar Respuesta</h4>
+            <!-- MODAL AGREGAR RESPUESTAS-->
+            <div class="modal fade" id="agregaropciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Agregar Respuesta</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group form-group-sm">
+                                <label>Respuesta</label>
+                                <input type="text" class="form-control" placeholder="Ingrese opcion" name="agregar_opcion" id="agregar_opcion"/>
+                            </div>
+                            <div class="alert alert-success" id="estado_agregar"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary" onclick="agregar()">Agregar</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                  <div class="form-group form-group-sm">
-                    <label>Respuesta</label>
-                      <input type="text" class="form-control" placeholder="Ingrese opcion" name="agregar_opcion" id="agregar_opcion"/>
-                  </div>
-                  <div id="estado_autor"></div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                  <button type="button" class="btn btn-primary"  id="botonAgregarAutor">Agregar</button>
-                </div>
-              </div>
             </div>
-          </div>
+            <script type="text/javascript">
+                var arr = [];
+
+                var letra = 1;
+                function agregar() {
+
+                    var opcion = document.getElementById('agregar_opcion').value;
+
+                    arr.push({id: letra, name: opcion});
+                    document.getElementById('estado_agregar').innerHTML = "Se ha agregado correctamente";
+                    document.getElementById('estado_agregar').style.visibility = "visible";
+                    console.log(JSON.stringify(arr, null, 4));
+                    letra++;
+                }
+                function ocultar_mensaje() {
+                    document.getElementById('estado_agregar').style.visibility = "hidden";
+                }
+                function imprimir() {
+                    $.each(arr, function (key, value) {
+                        console.log(key + ": " + arr[key]);
+                    });
+                }
+                $(document).ready(function () {
+                    $("#token-input-opciones").tokenInput(arr,
+                            {
+                                preventDuplicates: true
+                            }, {
+                        onAdd: function (item) {
+                            //letra++;
+                            // alert("Added " + item.name);
+                        },
+                        onDelete: function (item) {
+                            //letra--;
+
+                            // alert("Deleted " + item.name);
+                        },
+                        onResult: function (results) {
+
+                            $.each(results, function (index, value) {
+                                value.name;
+                            });
+
+                            return results;
+                        }
+                    });
+                });
+            </script>
         <?php } ?>
     </div>
 </section>
