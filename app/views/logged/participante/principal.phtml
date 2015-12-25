@@ -1,0 +1,41 @@
+<?php
+$G->title = "CAMIONEROS";
+?>
+
+<section style="padding-left: 3%">
+    <h3>
+        Resultados
+    </h3>
+</section>
+<section class="content">
+    <table class="table table-hover" id="tblDatos">
+        <thead>
+            <tr>
+                <th style='text-align: center'>Imagen</th>
+                <th style='text-align: center'>C&oacute;digo</th>
+                <th style='text-align: center'>Producto</th>
+                <th style='width: 35%; text-align: center'>Descripci&oacute;n</th>
+                <th style='text-align: center'>Precio</th>
+                <th style='text-align: center'>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody style='text-align: center' >
+  
+            <tr><td colspan='9'>No hay resultados con esos datos</td></tr>
+          
+
+        </tbody>
+    </table> 
+   
+    <div id="paginador" class="btn btn-lg btn-primary"></div>
+    <script type="text/javascript">
+        var p = new Paginador(document.getElementById('paginador'), document.getElementById('tblDatos'), 10);
+        p.Mostrar();
+    </script>
+
+    <h3>
+        <!--<small>Lista <span class="label label-danger">Total de registros: <%out.println(totalElementos);%></span></small>-->
+    </h3>
+    <!--ul class="pagination">
+</ul-->
+</section>

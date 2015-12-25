@@ -1,0 +1,158 @@
+<?php
+$G->title = "PAQUETES";
+loadView("logged/header.phtml");
+loadView("logged/menu.phtml");
+?>
+
+
+<div class="container-fluid" style="padding-top:60px;">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="<?php echo $G->config['w_url']?>/paquetes">VER TODOS<span
+                            class="sr-only">(actual)</span></a></li>
+                <?php if( $G->user->data->u_level == 1 ) { ?><li><a href="<?php echo $G->config['w_url']?>/paquetes/nuevo">INGRESAR</a></li>
+                <?php }
+                ?>
+                <li class="hide"><a href="<?php echo $G->config['w_url']?>/paquetes/buscar">BUSCAR</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-1 main">
+            <h1 class="page-header">Paquetes</h1>
+
+            <?php
+
+            if( $G->act == "registros") {
+
+                ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Codigo</th>
+                            <th>Descripcion</th>
+                            <th>Destinatario</th>
+                            <th>Cedula del camionero</th>
+                            <th>Provincia</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php
+
+                        if (!empty($G->paquetes)) {
+
+                            foreach ($G->paquetes as $paquete):
+
+                                ?>
+                                <tr>
+                                    <td><?php echo $paquete["pid"] ?></td>
+                                    <td><?php echo $paquete["p_codigo"] ?></td>
+                                    <td><?php echo $paquete["p_desc"] ?></td>
+                                    <td><?php echo $paquete["p_dest"] ?></td>
+                                    <td><?php echo $paquete["p_camionero"] ?></td>
+                                    <td><?php echo $paquete["p_provincia"] ?></td>
+
+                                </tr>
+                                <?php
+
+
+                            endforeach;
+
+                        } else {
+
+                            echo "<tr class='alert alert-danger' >No se han encontrado registros.</tr>";
+
+                        }
+
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php
+
+            } elseif ( $G->act == "nuevo"){
+
+                ?>
+
+                <form role="form" method="POST" action="" class="col-md-5">
+
+                    <?php
+                    if( $_SERVER["REQUEST_METHOD"] == "POST") {
+                        if (!empty($G->error) && $G->error != "ok") {
+                            ?>
+                            <div class="alert alert-danger"><p><?php echo str_replace("ok", "", $G->error); ?></p></div>
+                            <?php
+                        } else {
+
+                            ?>
+                            <div class="alert alert-success"><p>Se ha creado correctamente el nuevo registro.</p></div>
+                            <?php
+
+                        }
+                    }
+                    ?>
+
+                    <div class="form-group">
+                        <label>Codigo</label>
+                        <input name="codigo" class="form-control" type="text" maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripcion</label>
+                        <input name="desc" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Destinatario</label>
+                        <input name="dest" class="form-control" type="text" >
+                    </div>
+                    <div class="form-group">
+                        <label>Direccion</label>
+                        <input name="direccion" class="form-control" id="direccion" type="text" >
+                    </div>
+                    <div class="form-group">
+                        <label>Cedula del camionero</label>
+                        <select name="camionero" class="form-control">
+                        <?php
+
+                        foreach($G->camioneros as $camionero ){
+
+                            echo "<option value='".$camionero["c_cedula"]."'>".$camionero["c_cedula"]." (".$camionero["c_nombres"].")</option>";
+                        }
+
+                        ?>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre de la provincia</label>
+                        <select name="provincia" class="form-control">
+                            <?php
+
+                            foreach($G->provincias as $provincia ){
+
+                                echo "<option value='".$provincia["p_codigo"]."'>".$provincia["p_codigo"]." (".$provincia["p_nombre"].")</option>";
+                            }
+
+                            ?>
+
+                        </select>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="ingresar">Ingresar</button>
+                    </div>
+
+                </form>
+
+
+                <?php
+
+            }
+
+            ?>
+        </div>
+    </div>
+</div>
+

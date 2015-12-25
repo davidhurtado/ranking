@@ -1,0 +1,138 @@
+<?php
+$G->title = "CAMIONEROS";
+loadView("logged/header.phtml");
+loadView("logged/menu.phtml");
+?>
+
+
+<div class="container-fluid" style="padding-top:60px;">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="active"><a href="<?php echo $G->config['w_url']?>/camioneros">VER TODOS<span
+                                class="sr-only">(actual)</span></a></li>
+                    <?php if( $G->user->data->u_level == 1 ) { ?> <li><a href="<?php echo $G->config['w_url']?>/camioneros/nuevo">INGRESAR</a></li>
+                    <?php } ?>
+                    <li class="hide"><a href="<?php echo $G->config['w_url']?>/camioneros/buscar">BUSCAR</a></li>
+                </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-1 main">
+            <h1 class="page-header">Camioneros</h1>
+
+            <?php
+
+            if( $G->act == "registros") {
+
+                ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>C&eacute;dula</th>
+                            <th>Nombres</th>
+                            <th>Tel&eacute;fono</th>
+                            <th>Direccion</th>
+                            <th>Salario</th>
+                            <th>Ciudad</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php
+
+                        if (!empty($G->camioneros)) {
+
+                            foreach ($G->camioneros as $camionero):
+
+                                ?>
+                                <tr>
+                                    <td><?php echo $camionero["cid"] ?></td>
+                                    <td><?php echo $camionero["c_cedula"] ?></td>
+                                    <td><?php echo $camionero["c_nombres"] ?></td>
+                                    <td><?php echo $camionero["c_telefono"] ?></td>
+                                    <td><?php echo $camionero["c_direccion"] ?></td>
+                                    <td><?php echo $camionero["c_salario"] ?></td>
+                                    <td><?php echo $camionero["c_ciudad"] ?></td>
+
+                                </tr>
+                                <?php
+
+
+                            endforeach;
+
+                        } else {
+
+                            echo "<tr class='alert alert-danger' >No se han encontrado registros.</tr>";
+
+                        }
+
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php
+
+            } elseif ( $G->act == "nuevo"){
+
+                ?>
+
+                <form role="form" method="POST" action="" class="col-md-5">
+
+                    <?php
+                    if( $_SERVER["REQUEST_METHOD"] == "POST") {
+                        if (!empty($G->error) && $G->error != "ok") {
+                            ?>
+                            <div class="alert alert-danger"><p><?php echo str_replace("ok", "", $G->error); ?></p></div>
+                            <?php
+                        } else {
+
+                            ?>
+                            <div class="alert alert-success"><p>Se ha creado correctamente el nuevo registro.</p></div>
+                            <?php
+
+                        }
+                    }
+                    ?>
+
+                    <div class="form-group">
+                        <label>Cedula</label>
+                        <input name="cedula" class="form-control" id="cedula" type="text" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombres</label>
+                        <input name="nombres" class="form-control" id="nombres" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <input name="telf" class="form-control" id="telf" type="text" >
+                    </div>
+                    <div class="form-group">
+                        <label>Direccion</label>
+                        <input name="direccion" class="form-control" id="direccion" type="text" >
+                    </div>
+                    <div class="form-group">
+                        <label>Salario</label>
+                        <input name="salario" class="form-control" id="salario" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Ciudad</label>
+                        <input name="ciudad" class="form-control" id="ciudad" type="text">
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="ingresar">Ingresar</button>
+                    </div>
+
+                </form>
+
+
+            <?php
+
+            }
+
+            ?>
+        </div>
+    </div>
+</div>
+

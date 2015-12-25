@@ -1,0 +1,131 @@
+<?php
+$G->title = "PAQUETES";
+loadView("logged/header.phtml");
+loadView("logged/menu.phtml");
+?>
+
+
+<div class="container-fluid" style="padding-top:60px;">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="<?php echo $G->config['w_url']?>/camiones">VER TODOS<span
+                            class="sr-only">(actual)</span></a></li>
+                <?php if( $G->user->data->u_level == 1 ) { ?>
+                    <li><a href="<?php echo $G->config['w_url'] ?>/camiones/nuevo">INGRESAR</a></li>
+                    <?php
+                }
+                ?>
+                <li class="hide"><a href="<?php echo $G->config['w_url']?>/camiones/buscar">BUSCAR</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-1 main">
+            <h1 class="page-header">Camiones</h1>
+
+            <?php
+
+            if( $G->act == "registros") {
+
+                ?>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Matricula</th>
+                            <th>Modelo</th>
+                            <th>Tipo</th>
+                            <th>Potencia</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php
+
+                        if (!empty($G->camiones)) {
+
+                            foreach ($G->camiones as $camiones):
+
+                                ?>
+                                <tr>
+                                    <td><?php echo $camiones["cid"] ?></td>
+                                    <td><?php echo $camiones["c_matricula"] ?></td>
+                                    <td><?php echo $camiones["c_modelo"] ?></td>
+                                    <td><?php echo $camiones["c_tipo"] ?></td>
+                                    <td><?php echo $camiones["c_potencia"] ?></td>
+
+
+                                </tr>
+                                <?php
+
+
+                            endforeach;
+
+                        } else {
+
+                            echo "<tr class='alert alert-danger' >No se han encontrado registros.</tr>";
+
+                        }
+
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php
+
+            } elseif ( $G->act == "nuevo"){
+
+                ?>
+
+                <form role="form" method="POST" action="" class="col-md-5">
+
+                    <?php
+                    if( $_SERVER["REQUEST_METHOD"] == "POST") {
+                        if (!empty($G->error) && $G->error != "ok") {
+                            ?>
+                            <div class="alert alert-danger"><p><?php echo str_replace("ok", "", $G->error); ?></p></div>
+                            <?php
+                        } else {
+
+                            ?>
+                            <div class="alert alert-success"><p>Se ha creado correctamente el nuevo registro.</p></div>
+                            <?php
+
+                        }
+                    }
+                    ?>
+
+                    <div class="form-group">
+                        <label>Matricula</label>
+                        <input name="matricula" class="form-control" type="text" maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input name="modelo" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <input name="tipo" class="form-control" type="text" >
+                    </div>
+                    <div class="form-group">
+                        <label>Potencia</label>
+                        <input name="potencia" class="form-control" id="direccion" type="text" >
+                    </div>
+
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="ingresar">Ingresar</button>
+                    </div>
+
+                </form>
+
+
+                <?php
+
+            }
+
+            ?>
+        </div>
+    </div>
+</div>
+

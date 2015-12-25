@@ -1,0 +1,112 @@
+<style>
+    .thumb {
+        height: 300px;
+        border: 1px solid #000;
+        margin: 10px 5px 0 0;
+    }
+</style>
+<section class="content-header">
+    <h1>
+        <?php echo strtoupper($G->act) . ' | '; ?> PREGUNTAS 
+    </h1>
+</section>
+<section class="content">
+
+    <div class="box box-danger">
+
+        <?php if ($G->act == 'agregar') { ?>
+            <div class="box-body">
+                <form id="frmreg" method="post" class="form-horizontal" action="opcion">
+                    <div class="col-lg-8">
+                        <div class="form-group form-group-sm">
+                            <label for="id" class="col-lg-2 control-label">Id</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="id" name="id" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="pregunta" class="col-lg-2 control-label">Pregunta</label>
+                            <div class="col-lg-10">
+                                  <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="pregunta" name="pregunta" placeholder="Ingrese la pregunta" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="descripcion" class="col-lg-2 control-label">Descripci&oacute;n</label>
+                            <div class="col-lg-10">
+                                  <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripci&oacute;n" required></textarea>
+                            </div>
+                        </div>
+                         <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregaropciones">Añadir Opcion</a>
+                        <div class="form-group form-group-sm">
+                            <label for="opciones" class="col-lg-2 control-label">Opciones</label>
+                            <div class="col-lg-10">
+                                <input multiple="multiple" id="opciones" name="opciones[]" type="text" class="form-control" placeholder="Ingrese la respuesta" required>
+                            </div>
+                        </div>
+                         
+                        <div class="form-group form-group-sm">
+                            <label for="respuesta" class="col-lg-2 control-label">Respuesta</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="respuesta" name="respuesta" placeholder="Ingrese la respuesta" required>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="nick" class="col-lg-2 control-label">Nickname</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="nick" name="nick" placeholder="Ingrese nickname" required>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="pass" class="col-lg-2 control-label">Contrase&ntilde;a</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="pass" name="pass" placeholder="Ingrese contrase&ntilde;a"  pattern="[0-9.]{1,9}" data-valid-min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="sesion" class="col-lg-2 control-label">Sesi&oacute;n</label>
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control" id="sesion" name="sesion"  disabled>
+                            </div>
+                            <label for="tipo" class="col-lg-2 control-label">Tipo</label>
+                            <div class="col-lg-4">
+                                <select id="tipo" name="tipo"  class="form-control">
+                                    <option value="1">Administrador</option>
+                                    <option value="3">Participante</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-lg-6 col-lg-offset-4">
+                            <a href="index"  class="btn btn-default">Atr&aacute;s</a>
+                            <button type="reset" class="btn btn-danger" >Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        <!-- MODAL AGREGAR RESPUESTAS-->
+                  <div class="modal fade" id="agregaropciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Agregar Respuesta</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group form-group-sm">
+                    <label>Respuesta</label>
+                      <input type="text" class="form-control" placeholder="Ingrese nombre de autor" name="autorAgrega" id="autorAgrega"/>
+                  </div>
+                  <div id="estado_autor"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary"  id="botonAgregarAutor">Agregar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php } ?>
+    </div>
+</section>

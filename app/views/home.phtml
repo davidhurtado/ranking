@@ -1,0 +1,32 @@
+<?php
+$G->title = "Inicio";
+loadView("logged/header.phtml");
+?>
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="left-side sidebar-offcanvas">                
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- search form -->
+            <form action="index.php?menu=usuario_buscar" method="post" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="dni" class="form-control" placeholder="Buscar..."/>
+                    <span class="input-group-btn">
+                        <button type='submit' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </form>
+            <?php
+            loadView("logged/" . $G->menu_principal);
+            ?>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">      
+        <?php
+        loadView("logged/" . $G->contenido);
+        ?>
+    </aside><!-- /.right-side -->
+</div><!-- ./wrapper -->

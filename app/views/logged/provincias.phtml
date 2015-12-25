@@ -1,0 +1,129 @@
+<style>
+    .thumb {
+        height: 300px;
+        border: 1px solid #000;
+        margin: 10px 5px 0 0;
+    }
+</style>
+<section class="content-header">
+    <h1>
+        PRODUCTOS
+    </h1>
+</section>
+<section class="content">
+    <div class="box box-danger">
+        <div class="box-header"><h3 class="box-title"><%=formulario%></h3></div>
+        <div class="box-body">
+            <form id="frmreg" method="post" class="form-horizontal" action="opcion">
+                <input type="hidden" name="accion" value="<%=opcion%>" >
+                <div class="col-lg-8">
+                    <div class="form-group form-group-sm">
+                        <label for="titulo" class="col-lg-2 control-label">C&oacute;digo</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="codigo" <%=enabledCode%> name="txtcodigo" value="<%=codigo%>" placeholder="Codigo del producto" required>
+
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="titulo" class="col-lg-2 control-label">Producto</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="producto" name="txtproducto" value="<%=producto%>" placeholder="Nombre del producto" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="titulo" class="col-lg-2 control-label">Descripci&oacute;n</label>
+                        <div class="col-lg-10">
+                            <textarea style="resize: none; height: 50%" rows="9" class="form-control" id="descripcion" name="txtdescripcion" placeholder="Descripcion del producto" required><%=descripcion%></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="titulo" class="col-lg-2 control-label">Precio</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="precio" name="txtprecioventa" placeholder="Precio del producto" value="<%=precioventa%>" pattern="[0-9.]{1,9}" data-valid-min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="titulo" class="col-lg-2 control-label">Stock</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="stock" name="txtstock" placeholder="Cantidad" value="<%=stock%>" pattern="[0-9]{1,5}" data-valid-min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="fecha" class="col-lg-2 control-label">Fecha</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" id="fecha" name="fecha" value="<%=fechaingreso%>"  disabled>
+                        </div>
+                        <label for="estado" class="col-lg-2 control-label">Estado</label>
+                        <div class="col-lg-4">
+                            <select id="estado" name="txtestado"  class="form-control">
+                                <option value="1">Mostrar</option>
+                                <option value="0">Ocultar</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group form-group-sm">
+                        <label for="imagen" class="col-lg-2 control-label">Imagen</label>
+                        <div class="col-lg-10">
+                            <input type="file" id="files" name="files[]"  class="form-control"/>
+                            <%if (boton.compareTo("Editar") == 0 && imagen.length()>0) {%>
+                            <input type="text" id="nomImg" name="nomImg" value="<%=imagen%>" hidden>
+                            <script>
+                                $(document).on("ready", function () {
+                                    document.getElementById("list").innerHTML = ['<img class="thumb" src="img_productos/', $("#nomImg").val(), '" />'].join('');
+                                });
+                            </script>
+                            <%} else{%>
+                            <input type="text" id="nomImg" name="nomImg" hidden>
+                            <%}%>
+                        </div>
+                    </div> 
+                    <output id="list" style=" alignment-adjust: central"></output>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-lg-6 col-lg-offset-4">
+                        <a href="index"  class="btn btn-default">Atr&aacute;s</a>
+                        <button type="reset" class="btn btn-danger" >Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><%=boton%></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+
+    function Limpear() {
+        document.getElementById("list").innerHTML = ['<img class="thumb" hidden/>'].join('');
+        // $("#editarFoto").val("");
+        // location.href = "movimiento?accion=agregarcarrito";
+    }
+    ;
+    function archivo(evt) {
+        var files = evt.target.files; // FileList object
+
+        // Obtenemos la imagen del campo "file".
+        for (var i = 0, f; f = files[i]; i++) {
+            //Solo admitimos imágenes.
+            if (!f.type.match('image.*')) {
+                continue;
+            }
+
+            var reader = new FileReader();
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    // Insertamos la imagen
+                    //document.getElementById("list").innerHTML = ['<img class="thumb" src="', e.target.result, '" title="', escape(theFile.name), '"/>'].join('');
+                    Limpear();
+                    document.getElementById("list").innerHTML = ['<img class="thumb" src="', e.target.result, '" title="', escape(theFile.name), '"/>'].join('');
+                    $("#nomImg").val(escape(theFile.name));
+                };
+            })(f);
+            reader.readAsDataURL(f);
+        }
+    }
+
+    document.getElementById('files').addEventListener('change', archivo, false);</script>
+
+
