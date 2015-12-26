@@ -1,18 +1,19 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: PC90
  * Date: 04/12/2015
  * Time: 11:06
  */
-if( !$G->user->isLogged() ){
+if (!$G->user->isLogged()) {
     redirectTo("login");
-}else{
+} else {
     $G->error = "ok";
 
-    if( $_SERVER["REQUEST_METHOD"] == "POST"){
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        if( !empty($_POST["matricula"]) ){
+        if (!empty($_POST["matricula"])) {
 
 
 
@@ -23,42 +24,53 @@ if( !$G->user->isLogged() ){
             //$camionero = !empty($_POST["camionero"]) ? trim($_POST["camionero"]) : ($G->error .= "Falta cedula del camionero.<br/>");
 
 
-            if( $G->error == "ok" ) {
+            if ($G->error == "ok") {
 
 
-                $insert_query = $G->db->prepare("INSERT INTO ".DB_PREFIX."usuarios (c_matricula, c_modelo, c_tipo, c_potencia)
+                $insert_query = $G->db->prepare("INSERT INTO " . DB_PREFIX . "usuarios (c_matricula, c_modelo, c_tipo, c_potencia)
             VALUES (?, ?, ?, ?)");
 
                 $insert_query->execute(
-
-                    array( $matricula, $modelo, $tipo, $potencia)
-
+                        array($matricula, $modelo, $tipo, $potencia)
                 );
-
-
             }
-
-
-
-
         }
-
     }
 
+      
+    $G->act = isset($_GET["act"]) ? trim($_GET["act"]) : "lista";
+    $G->contenido = 'admin/usuarios.phtml';
 
+    if ($G->act == 'eliminar'){
+    //fernando balta jhong  
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+   
+            if (!empty($_GET["id"])) {
+                $uid = $_GET["id"];
+                 $query=$G->db->prepare("DELETE FROM " . DB_PREFIX . "usuarios WHERE u_id=".$uid);
+                 $query->execute();
+            }
+            /*
+              $uid = $_GET['u_id'];
+              $query->G->db->prepare("UPDATE * FROM " . DB_PREFIX . "usurios WHERE u_id='$uid'");
+              $query->execute();
+             */
+        }
+        $G->act = 'lista';
+    }
+    
     //Cargar los registros -->
-    $query = $G->db->prepare("SELECT * FROM ".DB_PREFIX."usuarios ORDER BY u_id ASC");
+    $query = $G->db->prepare("SELECT * FROM " . DB_PREFIX . "usuarios ORDER BY u_id ASC");
 
     $query->execute();
 
     //Existen registros?
-    if( $query->rowCount() ){
+    if ($query->rowCount()) {
         $G->usuarios = $query->fetchAll();
-    }else{
+    } else {
         $G->usuarios = null;
     }
-
-    $G->act = isset($_GET["act"]) ? trim($_GET["act"]) : "lista";
-        $G->contenido='admin/usuarios.phtml';
     loadView('home.phtml');
 }
+    
+    

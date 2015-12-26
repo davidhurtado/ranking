@@ -46,11 +46,13 @@
                                 <input id="token-input-opciones" name="token-input-opciones" type="text" class="form-control" placeholder="Ingrese opciones de respuestas" required>
                             </div>
                         </div>
-                        <a class="btn btn-success btn-xs" onclick="imprimir()">Imprimir</a>
+                     
                         <div class="form-group form-group-sm">
                             <label for="respuesta" class="col-lg-2 control-label">Respuesta</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" id="respuesta" name="respuesta" placeholder="Ingrese la respuesta" required>
+                                <select id="respuesta" name="respuesta" class="form-control">
+                                    <option value="#">Ingrese la respuesta</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
@@ -61,27 +63,9 @@
                             <label for="tipo" class="col-lg-2 control-label">Tipo</label>
                             <div class="col-lg-4">
                                 <select id="tipo" name="tipo"  class="form-control">
-                                    <option value="1">Administrador</option>
-                                    <option value="3">Participante</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="pass" class="col-lg-2 control-label">Contrase&ntilde;a</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="pass" name="pass" placeholder="Ingrese contrase&ntilde;a"  pattern="[0-9.]{1,9}" data-valid-min="1" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="sesion" class="col-lg-2 control-label">Sesi&oacute;n</label>
-                            <div class="col-lg-4">
-                                <input type="text" class="form-control" id="sesion" name="sesion"  disabled>
-                            </div>
-                            <label for="tipo" class="col-lg-2 control-label">Tipo</label>
-                            <div class="col-lg-4">
-                                <select id="tipo" name="tipo"  class="form-control">
-                                    <option value="1">Administrador</option>
-                                    <option value="3">Participante</option>
+                                    <option value="principiante">Principiante</option>
+                                    <option value="intermedio">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
                                 </select>
                             </div>
                         </div>
@@ -119,8 +103,9 @@
             </div>
             <script type="text/javascript">
                 var arr = [];
-
+                var seleccionados = [];
                 var letra = 1;
+                var literal_seleccionado = 0;
                 function agregar() {
 
                     var opcion = document.getElementById('agregar_opcion').value;
@@ -128,40 +113,67 @@
                     arr.push({id: letra, name: opcion});
                     document.getElementById('estado_agregar').innerHTML = "Se ha agregado correctamente";
                     document.getElementById('estado_agregar').style.visibility = "visible";
-                    console.log(JSON.stringify(arr, null, 4));
+                   // console.log(JSON.stringify(arr, null, 4));
                     letra++;
                 }
                 function ocultar_mensaje() {
                     document.getElementById('estado_agregar').style.visibility = "hidden";
                 }
                 function imprimir() {
-                    $.each(arr, function (key, value) {
-                        console.log(key + ": " + arr[key]);
-                    });
+                    for (var i in seleccionados)
+                    {
+                        if (!isNaN(seleccionados[i].id))
+                            if (seleccionados[i].id > 0)
+                                console.log(seleccionados[i].id + ": " + seleccionados[i].name);
+                    }
+
                 }
                 $(document).ready(function () {
+                    var sel = document.getElementById('respuesta');
                     $("#token-input-opciones").tokenInput(arr,
                             {
-                                preventDuplicates: true
-                            }, {
-                        onAdd: function (item) {
-                            //letra++;
-                            // alert("Added " + item.name);
-                        },
-                        onDelete: function (item) {
-                            //letra--;
+                                preventDuplicates: true,
+                                onAdd: function (item) {
 
-                            // alert("Deleted " + item.name);
-                        },
-                        onResult: function (results) {
+                                    var opt = document.createElement('option');
+                                    opt.appendChild(document.createTextNode(item.name));
+                                    opt.value = item.name;
+                                    opt.id = item.id;
+                                    sel.appendChild(opt);
+                                    var myOpts = document.getElementById('respuesta').options;
+                                    for (var i in myOpts) {
+                                        seleccionados.pop();
+                                    }
+                                    for (var i in myOpts) {
+                                        seleccionados.push({id: i, name: myOpts[i].value});
+                                    }
 
-                            $.each(results, function (index, value) {
-                                value.name;
+                                    literal_seleccionado++;
+                                },
+                                onDelete: function (item) {
+                                    var item = document.getElementById(item.id);
+                                    item.parentNode.removeChild(item);
+                                    var myOpts = document.getElementById('respuesta').options;
+                                    for (var i in myOpts) {
+                                        seleccionados.pop();
+                                    }
+                                    for (var i in myOpts) {
+                                        seleccionados.push({id: i, name: myOpts[i].value});
+                                    }
+                                    //   console.log("Borrando->"+ (item.id-1)+" : "+seleccionados[item.id-1].id + " <-> " + seleccionados[item.id-1].name);
+                                    // delete seleccionados[item.id-1];
+                                    // console.log(JSON.stringify(seleccionados, null, 4));
+                                    //literal_seleccionado--;
+                                },
+                                onResult: function (results) {
+
+                                    $.each(results, function (index, value) {
+                                        value.name = value.name + "2";
+                                    });
+
+                                    return results;
+                                }
                             });
-
-                            return results;
-                        }
-                    });
                 });
             </script>
         <?php } ?>
