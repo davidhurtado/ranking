@@ -36,8 +36,6 @@ if (!$G->user->isLogged()) {
             }
         }
     }
-
-      
     $G->act = isset($_GET["act"]) ? trim($_GET["act"]) : "lista";
     $G->contenido = 'admin/usuarios.phtml';
 
@@ -55,10 +53,10 @@ if (!$G->user->isLogged()) {
               $query->G->db->prepare("UPDATE * FROM " . DB_PREFIX . "usurios WHERE u_id='$uid'");
               $query->execute();
              */
+            
         }
-        $G->act = 'lista';
+       redirectTo("lista");
     }
-    
     //Cargar los registros -->
     $query = $G->db->prepare("SELECT * FROM " . DB_PREFIX . "usuarios ORDER BY u_id ASC");
 
