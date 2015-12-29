@@ -7,7 +7,7 @@
  * Time: 11:06
  */
 if (!$G->user->isLogged()) {
-    redirectTo("login");
+    redirectTo($G->config["w_url"] . DS . 'login');
 } else {
     if ($G->user->data->u_tipo == 1) {
         $G->error = "ok";

@@ -7,7 +7,7 @@
  * Time: 9:32
  */
 if (!$G->user->isLogged()) {
-    redirectTo("login");
+    redirectTo($G->config["w_url"] . DS . 'login');
 } else {
 
 //    $query_c = $G->db->query("SELECT * FROM ".DB_PREFIX."camioneros");

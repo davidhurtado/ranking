@@ -228,7 +228,7 @@
                 $('#botonEliminar').on('click', function () {
                     $.ajax({
                         method: 'POST',
-                        url: '/PlataformaRanking/usuarios/eliminar',
+                        url: '/usuarios/eliminar',
                         data: {
                             id: $('#id-usuario-hidden').val(),
                             accion: 'eliminar'

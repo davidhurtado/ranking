@@ -13,7 +13,7 @@ if (!$G->user->isLogged()) {
                 if (isset($_POST['id'])) {
                     if (strlen($_POST['id']) > 0) {
                         if ($G->error == "ok" && strlen($pregunta) > 0) {
-                            $insert_query = $G->db->prepare("DELETE FROM " . DB_PREFIX . "preguntas WHERE p_id='" . $id . "' AND p_pregunta='" . $pregunta . "'");
+                            $insert_query = $G->db->prepare("DELETE FROM " . DB_PREFIX . "preguntas WHERE p_id='" . $id . "'");
 
                             $insert_query->execute();
                             $insert_query = $G->db->prepare("DELETE FROM " . DB_PREFIX . "literales WHERE l_id='" . $id . "'");

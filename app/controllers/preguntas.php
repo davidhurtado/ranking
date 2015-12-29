@@ -43,7 +43,7 @@ if (!$G->user->isLogged()) {
                 $respuesta = !empty($_POST["respuesta"]) ? trim(filter_var($_POST["respuesta"], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH)) : ($G->error .= "Falta las respuestas.<br/>");
                 $nivel = !empty($_POST["nivel"]) ? trim(filter_var($_POST["nivel"], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH)) : ($G->error .= "Falta el nivel.<br/>");
                 $id_lenguaje = !empty($_POST["id_lenguaje"]) ? trim(filter_var($_POST["id_lenguaje"], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_STRIP_HIGH)) : ($G->error .= "Falta el ID del lenguaje.<br/>");
-                $opciones = !empty($_POST["opciones"]) ? $_POST["opciones"] : ($G->error .= "Falta opciones.<br/>" . $_POST["opciones"]);
+                $opciones = !empty($_POST["opciones"]) ? $_POST["opciones"] : ($G->error .= "Falta opciones.<br/>");
 
                 if ($G->error == "ok") {
                     $insert_query = $G->db->prepare("INSERT INTO " . DB_PREFIX . "preguntas (p_pregunta, p_descripcion, p_respuesta, p_nivel, p_id_lenguaje)
@@ -76,6 +76,8 @@ if (!$G->user->isLogged()) {
                         );
                         ++$letra . PHP_EOL;
                     endforeach;
+                }else{
+                    $G->error .= "Verifique lo que ingresa.</br>";
                 }
                 $G->act = 'lista';
                 redirectTo('agregar');
