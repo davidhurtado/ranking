@@ -11,7 +11,7 @@ RewriteRule ^lenguajes/lista$ index.php?controller=preguntas&act=lista-lenguaje 
 #USUARIOS -->
 RewriteRule ^usuarios/agregar$ index.php?controller=usuarios&act=agregar [L]
 RewriteRule ^usuarios/lista$ index.php?controller=usuarios&act=lista [L]
-RewriteRule ^usuarios/editar$ index.php?controller=usuarios&act=editar&id=$1 [QSA,L]
+RewriteRule ^usuarios/editar$ index.php?controller=usuarios&act=editar&id=$1 [QSA,L] 
 #RewriteRule ^usuarios/editar$ index.php?controller=usuarios&act=editar [L]
 RewriteRule ^usuarios/eliminar$ index.php?controller=usuarios&act=eliminar [L]
 #USUARIO REGISTRO - EDICION-->
