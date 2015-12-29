@@ -7,66 +7,504 @@
 </style>
 <section class="content-header">
     <h1>
-        <?php echo strtoupper($G->act) . ' | '; ?> PREGUNTAS 
+        <?php echo strtoupper($G->act) . ' | '; ?> PREGUNTAS          <?php if ($G->act == 'lista-lenguaje') { ?>
+            <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregarlenguajes" onclick="ocultar_mensaje()">A&ntilde;adir Lenguaje</a>
+        <?php } ?> 
     </h1>
 </section>
 <link rel="stylesheet" href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "token-input.css" ?>">
 <script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "jquery.tokeninput.js" ?>" type="text/javascript"></script>
 
-<section class="content">
+<section class="content"> 
 
     <div class="box box-danger">
+        <?php if ($G->act == 'lista') { ?>
+            <script>
+                var datos = ['lista', '#resultado', '#tblDatos'];
+            </script>
+            <script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "tiempo_real.js" ?>" type="text/javascript"></script>
 
-        <?php if ($G->act == 'agregar') { ?>
-            <div class="box-body">
-                <form id="frmreg" method="post" class="form-horizontal" action="opcion">
-                    <div class="col-lg-8">
-                        <div class="form-group form-group-sm">
-                            <label for="id" class="col-lg-2 control-label">Id</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="id" name="id" disabled>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="pregunta" class="col-lg-2 control-label">Pregunta</label>
-                            <div class="col-lg-10">
-                                <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="pregunta" name="pregunta" placeholder="Ingrese la pregunta" required></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="descripcion" class="col-lg-2 control-label">Descripci&oacute;n</label>
-                            <div class="col-lg-10">
-                                <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripci&oacute;n" required></textarea>
-                            </div>
-                        </div>
-                        <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregaropciones" onclick="ocultar_mensaje()">A&ntilde;adir Opcion</a>
-                        <div class="form-group form-group-sm">
-                            <label for="opciones" class="col-lg-2 control-label">Opciones</label>
-                            <div class="col-lg-10">
-                                <input id="token-input-opciones" name="token-input-opciones" type="text" class="form-control" placeholder="Ingrese opciones de respuestas" required>
-                            </div>
-                        </div>
+            <div class='table-responsive' id="resultado">
+                <table class="table table-hover" id="tblDatos">
+                    <thead>
+                        <tr>
+                            <th style='text-align: center'>#</th>
+                            <th style='text-align: center'>PREGUNTA</th>
+                            <th style='width:35%; text-align: center'>DESCRIPCION</th>
+                            <th style='text-align: center'>RESPUESTA</th>
+                            <th style='text-align: center'>NIVEL</th>
+                            <th style='text-align: center'>LENGUAJE</th>
+                            <th spancol="2" style='text-align: center'>ACCION</th>
+                        </tr>
+                    </thead>
+                    <tbody style='text-align: center' >
+                        <?php
+                        if (!empty($G->preguntas)) {
 
-                        <div class="form-group form-group-sm">
-                            <label for="respuesta" class="col-lg-2 control-label">Respuesta</label>
-                            <div class="col-lg-10">
-                                <select id="respuesta" name="respuesta" class="form-control">
-                                    <option value="#">Ingrese la respuesta</option>
-                                </select>
+                            foreach ($G->preguntas as $pregunta) {
+                                ?>
+                                <tr class='default'>
+                                    <td><?php echo $pregunta["p_id"] ?></td>
+                                    <td><?php echo $pregunta["p_pregunta"] ?></td>
+                                    <td><?php echo $pregunta["p_descripcion"] ?></td>
+                                    <td><?php echo $pregunta["p_respuesta"]; ?></td>
+                                    <?php
+                                    switch ($pregunta["p_nivel"]) {
+                                        case 1:
+                                            $color = 'default';
+                                            $tipo = 'Facil';
+                                            break;
+                                        case 2:
+                                            $color = 'warning';
+                                            $tipo = 'Medio';
+                                            break;
+                                        case 3:
+                                            $color = 'danger';
+                                            $tipo = 'Avanzado';
+                                            break;
+                                    }
+                                    ?>
+                                    <td><span class='label label-<?php echo $color ?>'><?php echo $tipo; ?></span></td>
+                                    <td><?php echo $pregunta["p_id_lenguaje"] ?></td>
+                                    <td>
+                                        <?php
+                                        if ($G->user->data->u_tipo == 1) {
+                                            echo "<a href='editar?id=" . $pregunta['p_id'] . "' class='btn btn-warning'> Editar</a>"
+                                            ?>
+                                            <a class="btn btn-danger" onclick="datos_id('<?php echo $pregunta['p_id']; ?>', '<?php echo $pregunta['p_pregunta'] ?>', '<?php echo $pregunta['p_id_lenguaje'] ?>')"  data-toggle="modal"  data-target='#eliminar-pregunta'>Eliminar</a>
+                                        <?php } else {
+                                            ?>
+                                            <a class="btn btn-primary" onclick="datos('<?php echo $pregunta['p_id']; ?>', '<?php echo $pregunta['p_pregunta'] ?>', '<?php echo $pregunta['p_id_lenguaje'] ?>')"  data-toggle="modal"  data-target='#responder-pregunta'>Responder</a> 
+                                        <?php }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                        } else {
+
+                            echo "<tr class='alert alert-danger' ><td colspan='7'>No se han encontrado registros.</td></tr>";
+                        }
+                        ?>
+
+                    </tbody>
+                </table> 
+            </div>
+            <?php if ($G->user->data->u_tipo == 1) { ?>
+                <!-- MODAL ELIMINAR PREGUNTA-->
+                <div class="modal fade" id="eliminar-pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">ELIMINAR PREGUNTA</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Pregunta a eliminar</label>
+                                    <input type="hidden"  class="form-control"   name="id-pregunta-hidden" id="id-pregunta-hidden">
+                                    <input type="text"  class="form-control"  name="pregunta-modal" id="pregunta-modal" disabled></div>
+                                <div id="estado_eliminar_pregunta"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"  class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonEliminarPregunta">Eliminar</button>
                             </div>
                         </div>
-                        <div class="form-group form-group-sm">
-                            <label for="sesion" class="col-lg-2 control-label">Nivel</label>
-                            <div class="col-lg-4">
-                                <input type="text" class="form-control" id="sesion" name="sesion"  disabled>
+                    </div>
+                </div>
+                <!-- FIN MODAL ELIMINAR PREGUNTA-->
+                <script type="text/javascript">
+                    var id, pregunta, lenguaje;
+                    $('#botonEliminarPregunta').on('click', function () {
+                        $.ajax({
+                            method: 'POST',
+                            url: '/PlataformaRanking/json_preguntas',
+                            data: {
+                                id: id,
+                                pregunta: pregunta,
+                                lenguaje: lenguaje,
+                                accion: 'eliminar'
+                            },
+                            success: function (response) {
+                                // console.log(" response-> " + response);
+                                $("#resultado").load('lista #tblDatos');
+                                $("#resultado").trigger("chosen:updated");
+                                $('#pregunta-modal').val('');
+                                //$('#estado_agregar_lenguaje').html('<div class="alert alert-success">Lenguaje: <strong>' + $('#agregar_lenguaje').val() + '</strong> agregado.<br>Cierre la ventana y verifique en las opciones.</div>');
+                                // $('#agregar_lenguaje').val('');
+                            }
+                        });
+                    });
+                    function datos_id(id, pregunta, lenguaje) {
+                        this.id = id;
+                        this.pregunta = pregunta;
+                        this.lenguaje = lenguaje;
+                        console.log("si viene " + this.id + " -> " + this.pregunta + " -> " + this.lenguaje);
+                        $('#estado_eliminar_pregunta').html("");
+                        $('#pregunta-modal').val(pregunta);
+                    }
+                </script>
+            <?php } if ($G->user->data->u_tipo == 3) { ?>
+                <!-- MODAL RESPONDER PREGUNTA-->
+                <div class="modal fade" id="responder-pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">RESPONDER PREGUNTA</h4>
                             </div>
-                            <label for="tipo" class="col-lg-2 control-label">Tipo</label>
-                            <div class="col-lg-4">
-                                <select id="tipo" name="tipo"  class="form-control">
-                                    <option value="principiante">Principiante</option>
-                                    <option value="intermedio">Intermedio</option>
-                                    <option value="avanzado">Avanzado</option>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Pregunta:</label>
+                                    <input type="text"  class="form-control"   name="pregunta-modal" id="pregunta-modal" disabled>
+                                             <select id="opciones" name="opciones"  class="form-control">
                                 </select>
+                                <div id="estado_responder"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"  class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonResponderPregunta">Responder</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    var id, pregunta, lenguaje, respuesta;
+                    $('#botonResponderPregunta').on('click', function () {
+                        this.respuesta = $('#pregunta-modal').val(pregunta);
+                        $.ajax({
+                            method: 'POST',
+                            url: '/PlataformaRanking/json_preguntas',
+                            data: {
+                                id: id,
+                                pregunta: pregunta,
+                                lenguaje: lenguaje,
+                                respuesta: respuesta,
+                                accion: 'responder'
+                            },
+                            success: function (response) {
+                                $("#resultado").load('lista #tblDatos');
+                                $("#resultado").trigger("chosen:updated");
+                                $('#pregunta-modal').val('');
+                                $('#estado-responder').val(response);
+                            }
+                        });
+                    });
+                    function datos(id, pregunta, lenguaje) {
+                        this.id = id;
+                        this.pregunta = pregunta;
+                        this.lenguaje = lenguaje;
+                        $('#estado_responder').html("");
+                        $('#pregunta-modal').val(pregunta);
+                        // $('#descripcion').val('aqui describo');
+                     
+                            $.ajax({
+                                method: 'POST',
+                                url: '/PlataformaRanking/json_preguntas',
+                                data: {
+                                    id: this.id,
+                                    pregunta: this.pregunta,
+                                    accion: 'opciones'
+                                },
+                                success: function (response) {
+                                    
+                                    $("#resultado").load('lista #tblDatos');
+                                    $("#resultado").trigger("chosen:updated");
+                                   // $('#pregunta-modal').val('');
+                                    $('#opciones').html(response);
+                                }
+                            });
+                        
+                    }
+                </script>
+            <?php }
+        }
+        ?>
+
+        <?php
+        if ($G->user->data->u_tipo == 1) {
+            if ($G->act == 'lista-lenguaje') {
+                ?>
+
+                <div class='table-responsive' id="resultado">
+                    <table class="table table-hover" id="tblDatos">
+                        <thead>
+                            <tr>
+                                <th style='text-align: center'>#</th>
+                                <th style='text-align: center'>LENGUAJE</th>
+                                <th spancol="2" style='text-align: center'>ACCION</th>
+                            </tr>
+                        </thead>
+                        <tbody style='text-align: center'>
+                            <?php
+                            if (!empty($G->lenguajes)) {
+
+                                foreach ($G->lenguajes as $lenguaje) {
+                                    ?>
+                                    <tr class='default'>
+                                        <td><?php echo $lenguaje["l_id"] ?></td>
+                                        <td id="lenguaje_<?php echo $lenguaje["l_id"] ?>"><?php echo $lenguaje["l_lenguaje"] ?></td>
+                                        <td><a class="btn btn-warning" id="lenguaje" onclick="datos_id('<?php echo $lenguaje['l_id'] ?>', '<?php echo $lenguaje['l_lenguaje'] ?>');
+                                                                ocultar_mensaje();" data-toggle="modal"  data-target='#editar-lenguaje'>Editar</a>
+                                            <a class="btn btn-danger" onclick="datos_id('<?php echo $lenguaje['l_id'] ?>', '<?php echo $lenguaje['l_lenguaje'] ?>')" id="eliminar-lenguaje" data-toggle="modal"  data-target='#eliminar'>Eliminar</a></td>
+                                    </tr>
+                                    <?php
+                                }
+                            } else {
+
+                                echo "<tr class='alert alert-danger' ><td colspan='7'>No se han encontrado registros.</td></tr>";
+                            }
+                            ?>
+
+                        </tbody>
+                    </table> 
+                </div>
+                <!-- MODAL EDITAR LENGUAJES-->
+                <div class="modal fade" id="editar-lenguaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Editar Lenguaje</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Lenguaje</label>
+                                    <input type="hidden"  name="id-lenguaje-hidden" id="id-lenguaje-hidden"/>
+                                    <input type="text"  class="form-control" placeholder="Ingrese opcion" name="editar-lenguaje-modal" id="editar-lenguaje-modal"/>
+                                </div>
+                                <div id="estado_editar_lenguaje"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"  class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonEditarlenguaje">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN MODAL EDITAR LENGUAJES-->
+                <!-- MODAL ELIMINAR LENGUAJES-->
+                <div class="modal fade" id="eliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Eliminar Lenguaje</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Lenguaje a eliminar</label>
+                                    <input type="hidden"  class="form-control"   name="id-eliminar-lenguaje-hidden" id="id-eliminar-lenguaje-hidden">
+                                    <input type="text"  class="form-control"  name="eliminar-lenguaje-modal" id="eliminar-lenguaje-modal" disabled></div>
+                                <div id="estado_eliminar_lenguaje"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"  class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonEliminarlenguaje">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN MODAL ELIMINAR LENGUAJES-->
+                <!-- MODAL AGREGAR LENGUAJES-->
+                <div class="modal fade" id="agregarlenguajes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Agregar Lenguaje</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Lenguaje</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese lenguaje" name="agregar_lenguaje" id="agregar_lenguaje"/>
+                                </div>
+                                <div id="estado_agregar_lenguaje"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonAgregarLenguaje">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FIN MODAL AGREGAR LENGUAJES-->
+                <script type="text/javascript">
+                    $('#botonEditarlenguaje').on('click', function () {
+                        $.ajax({
+                            method: 'POST',
+                            url: '/PlataformaRanking/json_lenguajes',
+                            data: {
+                                nombre_lenguaje: $('#editar-lenguaje-modal').val(),
+                                id_lenguaje: $('#id-lenguaje-hidden').val(),
+                                accion: 'editar'
+                            },
+                            success: function (response) {
+                                var mensaje;
+                                switch (response) {
+                                    case '1':
+                                        mensaje = "<div class='alert alert-success'>Lenguaje: <strong>'" + $('#editar-lenguaje-modal').val() + "'</strong> editado.<br>Cierre la ventana y verifique</div>";
+                                        break;
+                                    case '2':
+                                        mensaje = "<div class='alert alert-danger'><strong>No existe lenguaje</strong></div>";
+                                        break;
+                                    case '3':
+                                        mensaje = "<div class='alert alert-danger'><strong>Ingrese lenguaje</strong> </div>";
+                                        break;
+                                    default:
+                                        mensaje = "<div class='alert alert-danger'><strong>Error intente de nuevo</strong> </div>";
+                                        break;
+                                }
+                                $("#resultado").load('lista #tblDatos');
+                                $("#resultado").trigger("chosen:updated");
+                                $('#estado_editar_lenguaje').html(mensaje);
+                                $('#editar-lenguaje-modal').val('');
+                                //location.reload();
+                            }
+                        });
+                    });
+                    function ocultar_mensaje() {
+                        $('#estado_agregar').html('<div></div>');
+                        $('#estado_agregar_lenguaje').html('<div></div>');
+                        $('#estado_editar_lenguaje').html('<div></div>');
+                    }
+                    $('#botonAgregarLenguaje').on('click', function () {
+
+                        $.ajax({
+                            method: 'POST',
+                            url: '/PlataformaRanking/json_lenguajes',
+                            data: {
+                                nombre: $('#agregar_lenguaje').val(),
+                                accion: 'agregar',
+                                page: 'lista'
+                            },
+                            success: function (response) {
+                                //$('#resultado').append("<tr class='danger'><td>"+response[0]+"</td>"+response[1]+"<tr>");
+                                //console.log(response[0].value+" -> "+response[1]);
+                                $("#resultado").load('lista #tblDatos');
+                                $("#resultado").trigger("chosen:updated");
+                                $('#estado_agregar_lenguaje').html('<div class="alert alert-success">Lenguaje: <strong>' + $('#agregar_lenguaje').val() + '</strong> agregado.<br>Cierre la ventana y verifique en las opciones.</div>');
+                                $('#agregar_lenguaje').val('');
+                            }
+                        });
+                    });
+                    function datos_id(id, lenguaje) {
+                        $('#editar-lenguaje-modal').val(lenguaje);
+                        $('#id-lenguaje-hidden').val(id);
+                        $('#eliminar-lenguaje-modal').val(lenguaje);
+                        $('#id-eliminar-lenguaje-hidden').val(id);
+                        $('#estado_eliminar_lenguaje').html("");
+                    }
+                    $('#botonEliminarlenguaje').on('click', function () {
+                        $.ajax({
+                            method: 'POST',
+                            url: '/PlataformaRanking/json_lenguajes',
+                            data: {
+                                nombre: $('#eliminar-lenguaje-modal').val(),
+                                id: $('#id-eliminar-lenguaje-hidden').val(),
+                                accion: 'eliminar',
+                                page: 'lista'
+                            },
+                            success: function (response) {
+                                var mensaje;
+                                switch (response) {
+                                    case '1':
+                                        mensaje = "<div class='alert alert-success'>Lenguaje eliminado.<br>Cierre la ventana y verifique</div>";
+                                        break;
+                                    case '2':
+                                        mensaje = "<div class='alert alert-danger'><strong>No existe lenguaje</strong></div>";
+                                        break;
+                                    case '3':
+                                        mensaje = "<div class='alert alert-danger'><strong>Seleccione lenguaje</strong> </div>";
+                                        break;
+                                    default:
+                                        mensaje = "<div class='alert alert-danger'><strong>Error intente de nuevo</strong> </div>";
+                                        break;
+                                }
+                                $("#resultado").load('lista #tblDatos');
+                                $("#resultado").trigger("chosen:updated");
+                                $('#estado_eliminar_lenguaje').html(mensaje);
+                                $('#eliminar-lenguaje-modal').val('');
+                                $('#id-eliminar-lenguaje-hidden').val('');
+                            }
+                        });
+                    });
+                </script>
+
+                <?php
+            }
+        } else {
+            redirectTo($G->config["w_url"] . DS . 'logout');
+        }
+        ?>
+        <?php
+        if ($G->user->data->u_tipo == 1) {
+            if ($G->act == 'agregar') {
+                ?>
+                <div class="box-body">
+                    <form id="frmreg" method="post" class="form-horizontal" action="agregando">
+                        <div class="col-lg-8">
+                            <div class="form-group form-group-sm">
+                                <label for="id" class="col-lg-2 control-label">Id</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="id" name="id" value="<?php echo $G->IDP; ?>" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="pregunta" class="col-lg-2 control-label">Pregunta</label>
+                                <div class="col-lg-10">
+                                    <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="pregunta" name="pregunta" placeholder="Ingrese la pregunta" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="descripcion" class="col-lg-2 control-label">Descripci&oacute;n</label>
+                                <div class="col-lg-10">
+                                    <textarea style="resize: none; height: 50%" rows="4" pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ,.]{1,200}" data-valid-max="10" class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripci&oacute;n" required></textarea>
+                                </div>
+                            </div>
+                            <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregaropciones" onclick="ocultar_mensaje()">A&ntilde;adir Opcion</a>
+                            <div class="form-group form-group-sm">
+                                <label for="opciones" class="col-lg-2 control-label">Opciones</label>
+                                <div class="col-lg-10">
+                                    <select multiple="multiple" name="opciones[]" id="listaOpciones" class="form-control chosen" placeholder="Seleccione autores">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="respuesta" class="col-lg-2 control-label">Respuesta</label>
+                                <div class="col-lg-10">
+                                    <select id="respuesta" name="respuesta" class="form-control">
+                                        <option value="#">Ingrese la respuesta</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+
+                                <label for="id_lenguaje" class="col-lg-2 control-label">Lenguaje</label>
+                                <div class="col-lg-4">
+                                    <select id="id_lenguaje" name="id_lenguaje"  class="form-control">
+                                        <?php
+                                        if (!empty($G->lenguajes)) {
+                                            foreach ($G->lenguajes as $lenguaje):
+                                                echo " <option value='" . $lenguaje["l_id"] . "'>" . $lenguaje["l_lenguaje"] . "</option>";
+                                            endforeach;
+                                        }else {
+                                            echo " <option value='#'>Agregar lenguaje</option>";
+                                        }
+                                        ?>
+                                    </select><br>
+                                    <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#agregarlenguajes" onclick="ocultar_mensaje()">A&ntilde;adir Lenguaje</a>
+                                </div>
+                                <label for="tipo" class="col-lg-2 control-label">Nivel</label>
+                                <div class="col-lg-4">
+                                    <select id="nivel" name="nivel"  class="form-control">
+                                        <option value="1">Principiante</option>
+                                        <option value="2">Intermedio</option>
+                                        <option value="3">Avanzado</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
@@ -76,106 +514,166 @@
                                 <button type="submit" class="btn btn-primary">Agregar</button>
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <!-- MODAL AGREGAR RESPUESTAS-->
-            <div class="modal fade" id="agregaropciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Agregar Respuesta</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group form-group-sm">
-                                <label>Respuesta</label>
-                                <input type="text" class="form-control" placeholder="Ingrese opcion" name="agregar_opcion" id="agregar_opcion"/>
+                    </form>
+                </div>
+                <!-- MODAL AGREGAR RESPUESTAS-->
+                <div class="modal fade" id="agregaropciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Agregar Respuesta</h4>
                             </div>
-                            <div class="alert alert-success" id="estado_agregar"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary" onclick="agregar()">Agregar</button>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Respuesta</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese opcion" name="agregar_opcion" id="agregar_opcion"/>
+                                </div>
+                                <div id="estado_agregar"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonAgregarOpcion" onclick="agregar()">Agregar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <script type="text/javascript">
-                var arr = [];
-                var seleccionados = [];
-                var letra = 1;
-                var literal_seleccionado = 0;
-                function agregar() {
 
-                    var opcion = document.getElementById('agregar_opcion').value;
+                <!-- FIN MODAL AGREGAR RESPUESTAS-->
+                <!-- MODAL AGREGAR LENGUAJES-->
+                <div class="modal fade" id="agregarlenguajes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Agregar Lenguaje</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group form-group-sm">
+                                    <label>Lenguaje</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese lenguaje" name="agregar_lenguaje" id="agregar_lenguaje"/>
+                                </div>
+                                <div id="estado_agregar_lenguaje"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="botonAgregarLenguaje" onclick="agregar()">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    arr.push({id: letra, name: opcion});
-                    document.getElementById('estado_agregar').innerHTML = "Se ha agregado correctamente";
-                    document.getElementById('estado_agregar').style.visibility = "visible";
-                    // console.log(JSON.stringify(arr, null, 4));
-                    letra++;
-                }
-                function ocultar_mensaje() {
-                    document.getElementById('estado_agregar').style.visibility = "hidden";
-                }
-                function imprimir() {
-                    for (var i in seleccionados)
-                    {
-                        if (!isNaN(seleccionados[i].id))
-                            if (seleccionados[i].id > 0)
-                                console.log(seleccionados[i].id + ": " + seleccionados[i].name);
+                <!-- FIN MODAL AGREGAR LENGUAJES-->
+                <script type="text/javascript">
+                    //            $('#fecha').datepicker({
+                    //                format: "dd/mm/yyyy"
+                    //            });
+                    $('.chosen').chosen({
+                        no_results_text: "No se encontraron resultados",
+                        placeholder_text_multiple: "Seleccione alternativas"
+                    });
+                    var arr = [];
+                    var seleccionados = document.getElementById('listaOpciones');
+                    var letra = 1;
+                    var opciones_select = document.getElementById('listaOpciones');
+                    function agregar() {
+                        var opcion = document.getElementById('agregar_opcion').value;
+                        arr.push({id: letra, name: opcion});
+
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode(opcion));
+                        opt.value = opcion;
+                        opt.id = letra;
+                        opciones_select.appendChild(opt);
+                        letra++;
                     }
+                    function ocultar_mensaje() {
+                        $('#estado_agregar').html('<div></div>');
+                        $('#estado_agregar_lenguaje').html('<div></div>');
+                    }
+                    $("#listaOpciones").change(function () {
+                        var myOpts = document.getElementById('respuesta');
+                        var first = document.getElementById('listaOpciones');
+                        var options = first.innerHTML;
+                        var second = document.getElementById('respuesta');
+                        second.innerHTML = "";
+                        second.className = "form-control";
 
-                }
-                $(document).ready(function () {
-                    var sel = document.getElementById('respuesta');
-                    $("#token-input-opciones").tokenInput(arr,
-                            {
-                                preventDuplicates: true,
-                                onAdd: function (item) {
 
-                                    var opt = document.createElement('option');
-                                    opt.appendChild(document.createTextNode(item.name));
-                                    opt.value = item.name;
-                                    opt.id = item.id;
-                                    sel.appendChild(opt);
-                                    var myOpts = document.getElementById('respuesta').options;
-                                    for (var i in myOpts) {
-                                        seleccionados.pop();
-                                    }
-                                    for (var i in myOpts) {
-                                        seleccionados.push({id: i, name: myOpts[i].value});
-                                    }
+                        var opt = document.createElement('option');
+                        opt.appendChild(document.createTextNode("Ingrese la respuesta"));
+                        opt.value = "Ingrese la respuesta";
+                        opt.id = "#";
+                        myOpts.appendChild(opt);
 
-                                    literal_seleccionado++;
-                                },
-                                onDelete: function (item) {
-                                    var item = document.getElementById(item.id);
-                                    item.parentNode.removeChild(item);
-                                    var myOpts = document.getElementById('respuesta').options;
-                                    for (var i in myOpts) {
-                                        seleccionados.pop();
-                                    }
-                                    for (var i in myOpts) {
-                                        seleccionados.push({id: i, name: myOpts[i].value});
-                                    }
-                                    //   console.log("Borrando->"+ (item.id-1)+" : "+seleccionados[item.id-1].id + " <-> " + seleccionados[item.id-1].name);
-                                    // delete seleccionados[item.id-1];
-                                    // console.log(JSON.stringify(seleccionados, null, 4));
-                                    //literal_seleccionado--;
-                                },
-                                onResult: function (results) {
+                        var opciones = seleccionados.options;
+                        for (i = 0; i < opciones.length; i++) {
+                            if (opciones[i].selected === true) {
+                                var grupos = opciones[i].text;
+                                var opt = document.createElement('option');
+                                opt.appendChild(document.createTextNode(grupos));
+                                opt.value = i + 1;
+                                opt.id = i + 1;
+                                myOpts.appendChild(opt);
+                                // console.log(grupos);
+                            }
+                        }
+                    });
 
-                                    $.each(results, function (index, value) {
-                                        value.name = value.name + "2";
-                                    });
+                </script>
+                <script type="text/javascript">
+                    $('#botonAgregarLenguaje').on('click', function () {
 
-                                    return results;
-                                }
-                            });
-                });
-            </script>
-        <?php } ?>
+                        $.ajax({
+                            method: 'POST',
+                            url: '/PlataformaRanking/json_lenguajes',
+                            data: {
+                                nombre: $('#agregar_lenguaje').val(),
+                                accion: 'agregar',
+                                page: 'preguntas'
+                            },
+                            success: function (response) {
+                                $('#id_lenguaje').append(response);
+                                $("#id_lenguaje").trigger("chosen:updated");
+                                $('#estado_agregar_lenguaje').html('<div class="alert alert-success">Lenguaje: <strong>' + $('#agregar_lenguaje').val() + '</strong> agregado.<br>Cierre la ventana y verifique en las opciones.</div>');
+                                $('#agregar_lenguaje').val('');
+                            }
+                        });
+                    });
+                    $('#botonAgregarOpcion').on('click', function () {
+
+                        $.ajax({
+                            method: 'POST',
+                            url: 'json_preguntas.php',
+                            data: {
+                                nombre: $('#agregar_opcion').val(),
+                                id: letra
+                            },
+                            success: function (response) {
+                                $('#listaOpciones').append(response);
+                                $("#listaOpciones").trigger("chosen:updated");
+                                $('#estado_agregar').html('<div class="alert alert-success">Opcion: <strong>' + $('#agregar_opcion').val() + '</strong> agregada.<br>Cierre la ventana y verifique en las opciones.</div>');
+                                $('#agregar_opcion').val('');
+                            }
+                        });
+                    });
+                </script>
+                <?php
+            }
+        } else {
+            redirectTo($G->config["w_url"] . DS . 'logout');
+        }
+        ?>
+        <?php
+        if ($G->act == 'agregando') {
+            if ($G->error == 'ok') {
+                echo 'alert(Se ha agregado correctamente);';
+            } else {
+                echo 'alert(' . $G->error . ');';
+            }
+        }
+        ?>
+
     </div>
+
 </section>

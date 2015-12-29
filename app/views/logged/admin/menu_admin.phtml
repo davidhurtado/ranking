@@ -6,17 +6,21 @@
             <span>Preguntas</span>
             <i class="fa fa-angle-left pull-right"></i>
         </a>
-        <?php
-        if ($G->user->data->u_tipo == 1) {
-            ?>
             <ul class="treeview-menu">
                 <li><a href="<?php echo $G->config['w_url'] ?>/preguntas/agregar"><i class="fa fa-angle-double-right"></i> Agregar preguntas</a></li>
                 <li><a href="<?php echo $G->config['w_url'] ?>/preguntas/lista"><i class="fa fa-angle-double-right"></i> Lista de Preguntas</a></li>
-                <li><a href="<?php echo $G->config['w_url'] ?>/preguntas/buscar"><i class="fa fa-angle-double-right"></i> Buscar Preguntas</a></li>
             </ul>
-            <?php
-        }
-        ?>
+    </li>
+        <li class="treeview">
+
+        <a href="#">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            <span>Lenguajes</span>
+            <i class="fa fa-angle-left pull-right"></i>
+        </a>
+            <ul class="treeview-menu">
+                <li><a href="<?php echo $G->config['w_url'] ?>/lenguajes/lista"><i class="fa fa-angle-double-right"></i> Lista de Lenguajes</a></li>
+            </ul>
     </li>
     <li class="treeview">
         <a href="#">

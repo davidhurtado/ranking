@@ -13,8 +13,9 @@
         <!-- Ionicons -->
         <link href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "ionicons.min.css" ?>" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
-        <link href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "morris/morris.css" ?>" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "AdminLTE.css" ?>">
+        <link href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "morris/morris.css" ?>" rel="stylesheet" type="text/css" />
+
         <!-- jQuery 2.0.2 -->
         <script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "jquery-1.11.0.min.js" ?>"></script>
         <!-- Bootstrap -->
@@ -53,7 +54,7 @@
                             <ul class="dropdown-menu">
                                 <li class="user-footer">
                                     <div class="pull-right">
-                                        <a href="logout" class="btn btn-default btn-flat">Salir del sistema</a>
+                                        <a href="<?php echo $G->config["w_url"]?>/logout" class="btn btn-default btn-flat">Salir del sistema</a>
                                     </div>
                                 </li>
                             </ul>

@@ -1,125 +1,57 @@
-<script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "paginador.js" ?>" type="text/javascript"></script>
+<?php
+//Cargar el header de la pagina de Guest -->
+$G->title = "Registrarse";
+loadView("guest/header.phtml");
+?>
 
-<section class="content-header">
-    <h1>
-        <?php echo strtoupper($G->act) . ' | '; ?> USUARIOS 
-    </h1>
-</section>
-<section class="content">
-    <div class="box box-danger">
-        <?php if ($G->act == 'agregar') { ?>
-            <div class="box-body">
-                <form id="frmreg" method="post" class="form-horizontal" action="opcion">
-                    <input type="hidden" name="accion" value="<%=opcion%>" >
-                    <div class="col-lg-8">
-                        <div class="form-group form-group-sm">
-                            <label for="titulo" class="col-lg-2 control-label">Nombres</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ingrese nombres" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="titulo" class="col-lg-2 control-label">Apellidos</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Ingrese apellidos" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="titulo" class="col-lg-2 control-label">Producto</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="producto" name="txtproducto" value="<%=producto%>" placeholder="Nombre del producto" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="titulo" class="col-lg-2 control-label">Descripci&oacute;n</label>
-                            <div class="col-lg-10">
-                                <textarea style="resize: none; height: 50%" rows="9" class="form-control" id="descripcion" name="txtdescripcion" placeholder="Descripcion del producto" required><%=descripcion%></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="titulo" class="col-lg-2 control-label">Precio</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="precio" name="txtprecioventa" placeholder="Precio del producto" value="<%=precioventa%>" pattern="[0-9.]{1,9}" data-valid-min="1" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="titulo" class="col-lg-2 control-label">Stock</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="stock" name="txtstock" placeholder="Cantidad" value="<%=stock%>" pattern="[0-9]{1,5}" data-valid-min="1" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="fecha" class="col-lg-2 control-label">Fecha</label>
-                            <div class="col-lg-4">
-                                <input type="text" class="form-control" id="fecha" name="fecha" value="<%=fechaingreso%>"  disabled>
-                            </div>
-                            <label for="estado" class="col-lg-2 control-label">Estado</label>
-                            <div class="col-lg-4">
-                                <select id="estado" name="txtestado"  class="form-control">
-                                    <option value="1">Mostrar</option>
-                                    <option value="0">Ocultar</option>
-                                </select>
-                            </div>
-                        </div>
+<style>
+    body{
+        background-image: url('../app/media/images/binario.gif');
+    }
+</style>
+    <div class="form-box" id="login-box">
+        <div class="header">Registrarme</div>
+        <form id="frmreg" method="post" action="registrar">
+            <div class="body bg-gray">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input name="nombres" type="text" id="nombres" class="form-control" placeholder="Nombres" />
                     </div>
-                    <div class="col-lg-4">
-                        <div class="form-group form-group-sm">
-                            <label for="imagen" class="col-lg-2 control-label">Imagen</label>
-                            <div class="col-lg-10">
-                                <input type="file" id="files" name="files[]"  class="form-control"/>
-                                <%if (boton.compareTo("Editar") == 0 && imagen.length()>0) {%>
-                                <input type="text" id="nomImg" name="nomImg" value="<%=imagen%>" hidden>
-                                <script>
-                                    $(document).on("ready", function () {
-                                        document.getElementById("list").innerHTML = ['<img class="thumb" src="img_productos/', $("#nomImg").val(), '" />'].join('');
-                                    });
-                                </script>
-                                <%} else{%>
-                                <input type="text" id="nomImg" name="nomImg" hidden>
-                                <%}%>
-                            </div>
-                        </div> 
-                        <output id="list" style=" alignment-adjust: central"></output>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input name="apellidos" type="text" id="apellidos" class="form-control" placeholder="Apellidos" />
                     </div>
-                    <div class="form-group form-group-sm">
-                        <div class="col-lg-6 col-lg-offset-4">
-                            <a href="index"  class="btn btn-default">Atr&aacute;s</a>
-                            <button type="reset" class="btn btn-danger" >Cancelar</button>
-                            <button type="submit" class="btn btn-primary"><%=boton%></button>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                        <input name="nick" type="text" id="nick" class="form-control" pattern="[a-zA-Z0-9]{1,50}" data-valid-max="50" placeholder="Usuario" />
                     </div>
-                </form>
+                </div>
+                                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                        <input name="pass" type="password" id="pass" class="form-control" placeholder="Contrase&ntilde;a" />
+                    </div>
+                </div>
+                <?php
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    if (!empty($G->error) && $G->error != "ok") {
+                        ?>
+                        <div class="alert alert-danger"><p><?php echo str_replace("ok", "", $G->error); ?></p></div>
+                        <?php
+                    } else {
+                        ?>
+                        <div class="alert alert-success"><p>Se ha registrado correctamente.</p></div>
+                        <?php
+                    }
+                }
+                ?>
+                <input type="submit" name="SubmitRegistro" value="Registrarse"  class="btn bg-olive btn-block">
+                <a href="<?php echo $G->config["w_url"].DS;?>login" class="btn btn-danger btn-block">Ingresar</a>
             </div>
-        <?php } ?>
-        <?php if ($G->act == 'lista') { ?>
-            <table class="table table-hover" id="tblDatos">
-                <thead>
-                    <tr>
-                        <th style='text-align: center'>#</th>
-                        <th style='text-align: center'>NOMBRES</th>
-                        <th style='text-align: center'>APELLIDOS</th>
-                        <th style='text-align: center'>NICKNAME</th>
-                        <th style='text-align: center'>TIPO</th>
-                        <th style='text-align: center'>ESTADO</th>
-                        <th style='text-align: center'>F. REG</th>
-                    </tr>
-                </thead>
-                <tbody style='text-align: center' >
-                    <tr><td colspan='9'>No hay resultados con esos datos</td></tr>
-                </tbody>
-            </table> 
-
-            <!--<div id="paginador" class="btn btn-lg btn-primary"></div>-->
-            <script type="text/javascript">
-                // var p = new Paginador(document.getElementById('paginador'), document.getElementById('tblDatos'), 10);
-                // p.Mostrar();
-            </script>
-
-            <h3>
-                <!--<small>Lista <span class="label label-danger">Total de registros: <%out.println(totalElementos);%></span></small>-->
-            </h3>
-            <!--ul class="pagination">
-        </ul-->
-        <?php } ?>
+        </form>
     </div>
-</section>

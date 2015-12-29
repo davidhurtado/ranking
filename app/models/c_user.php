@@ -66,7 +66,7 @@ class User {
                 $G->menu_principal = "admin/menu_admin.phtml";
             } else
             if ($this->data->u_tipo == 3) {
-                $G->menu_principal = "participantes/menu_user.phtml";
+                $G->menu_principal = "participante/menu_user.phtml";
             }
         }
     }

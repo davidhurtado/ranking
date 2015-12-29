@@ -1,15 +1,24 @@
 DirectoryIndex index.php
 RewriteEngine On
 RewriteRule ^/?$ index.php
+#PREGUNTAS -->
 RewriteRule ^preguntas/agregar$ index.php?controller=preguntas&act=agregar [L]
+RewriteRule ^preguntas/agregando$ index.php?controller=preguntas&act=agregando [L]
 RewriteRule ^preguntas/lista$ index.php?controller=preguntas&act=lista [L]
-RewriteRule ^preguntas/buscar$ index.php?controller=preguntas&act=buscar [L]
+#LENGUAJES -->
+RewriteRule ^lenguajes/agregar$ index.php?controller=preguntas&act=agregar-lenguaje [L]
+RewriteRule ^lenguajes/lista$ index.php?controller=preguntas&act=lista-lenguaje [L]
+#USUARIOS -->
 RewriteRule ^usuarios/agregar$ index.php?controller=usuarios&act=agregar [L]
 RewriteRule ^usuarios/lista$ index.php?controller=usuarios&act=lista [L]
-RewriteRule ^usuarios/agregar$ index.php?controller=usuarios&act=agregar [L]
-RewriteRule ^usuarios/lista$ index.php?controller=usuarios&act=lista [L]
-RewriteRule ^usuarios/eliminar$ index.php?controller=usuarios&act=eliminar&id=$1 [QSA,L]
 RewriteRule ^usuarios/editar$ index.php?controller=usuarios&act=editar&id=$1 [QSA,L]
+#RewriteRule ^usuarios/editar$ index.php?controller=usuarios&act=editar [L]
+RewriteRule ^usuarios/eliminar$ index.php?controller=usuarios&act=eliminar [L]
+#USUARIO REGISTRO - EDICION-->
+RewriteRule ^usuario/registrar$ index.php?controller=registro&act=registrar [L]
+RewriteRule ^usuario/eliminar$ index.php?controller=registro&act=eliminar [L]
+RewriteRule ^usuario/editar$ index.php?controller=registro&act=editar [L]
+#RewriteRule ^usuarios/editar$ index.php?controller=usuarios&act=editar&id=$1 [QSA,L]
 RewriteRule ^camioneros/nuevo$ index.php?controller=camioneros&act=nuevo [L]
 RewriteRule ^camiones/nuevo$ index.php?controller=camiones&act=nuevo [L]
 RewriteRule ^provincias/nuevo$ index.php?controller=provincias&act=nuevo [L]

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: PC90
@@ -6,12 +7,12 @@
  * Time: 9:46
  */
 //Cargar las vistas o templates dependiendo del userLogged -->
-if( !$G->user->isLogged() ){
+if (!$G->user->isLogged()) {
 
     // Gestionar los errores del formulario de login -->
     $G->error = "ok";
 
-    if( $_SERVER["REQUEST_METHOD"] == "POST" ) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!empty($_POST['user']) && !empty($_POST['pass'])) {
 
@@ -25,6 +26,8 @@ if( !$G->user->isLogged() ){
 
                 if ($existData["u_password"] == $password_hashed) {
                     $G->user->loadData($existData);
+                    $insert_query = $G->db->prepare("UPDATE " . DB_PREFIX . "usuarios set u_sesion=1 WHERE u_id=" .$_SESSION["id"]. " AND u_nick='". $_SESSION["user"]."'");
+                    $insert_query->execute();
                     redirectTo("home");
                 } else {
                     $G->error = "La contrase&ntilde;a ingresa es incorrecta.";
@@ -35,14 +38,11 @@ if( !$G->user->isLogged() ){
         } else {
 
             $G->error = "Debe completar todos los campos.";
-
         }
     }
 
     loadView("login.phtml");
-
-}else{
+} else {
 
     redirectTo("home");
-
 }

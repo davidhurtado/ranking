@@ -1,31 +1,28 @@
 <script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "paginador.js" ?>" type="text/javascript"></script>
-<!--Fernando Balta -->
- <link rel="stylesheet" type="text/css" href="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "css" . DS . "tabla-responsive.css" ?>"/>
-<script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "tabla-responsive.js" ?>" type="text/javascript"></script>
 
- <section class="content-header">
-    <!-- codigo validacion  -->
-    <script type="text/javascript">
-        $(document).ready(function(){ 
-        $('#tblDatos').DataTable({
-          responsive: true,
-            colReorder: true,
-            buttons: [
-            'colvis'
-        ]
-       
-});
-});
-    </script>
+<section class="content-header">
     <h1>
-        <?php echo strtoupper($G->act) . ' | ';?> USUARIOS 
+        <?php echo strtoupper($G->act) . ' | '; ?> USUARIOS 
     </h1>
 </section>
 <section class="content">
     <div class="box box-danger">
         <?php if ($G->act == 'agregar') { ?>
             <div class="box-body">
-                <form id="frmreg" method="post" class="form-horizontal" action="opcion">
+                <form id="frmreg" method="post" class="form-horizontal" action="agregar">
+                    <?php
+                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                        if (!empty($G->error) && $G->error != "ok") {
+                            ?>
+                            <div class="alert alert-danger"><p><?php echo str_replace("ok", "", $G->error); ?></p></div>
+                            <?php
+                        } else {
+                            ?>
+                            <div class="alert alert-success"><p>Se ha creado correctamente el nuevo registro.</p></div>
+                            <?php
+                        }
+                    }
+                    ?>
                     <div class="col-lg-8">
                         <div class="form-group form-group-sm">
                             <label for="nombres" class="col-lg-2 control-label">Nombres</label>
@@ -48,14 +45,10 @@
                         <div class="form-group form-group-sm">
                             <label for="pass" class="col-lg-2 control-label">Contrase&ntilde;a</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" id="pass" name="pass" placeholder="Ingrese contrase&ntilde;a"  pattern="[0-9.]{1,9}" data-valid-min="1" required>
+                                <input type="password" class="form-control" id="pass" name="pass" placeholder="Ingrese contrase&ntilde;a"  pattern="[0-9.a-zA-Z@#$]{1,10}" data-valid-min="1" required>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="sesion" class="col-lg-2 control-label">Sesi&oacute;n</label>
-                            <div class="col-lg-4">
-                                <input type="text" class="form-control" id="sesion" name="sesion"  disabled>
-                            </div>
                             <label for="tipo" class="col-lg-2 control-label">Tipo</label>
                             <div class="col-lg-4">
                                 <select id="tipo" name="tipo"  class="form-control">
@@ -67,7 +60,7 @@
                     </div>
                     <div class="form-group form-group-sm">
                         <div class="col-lg-6 col-lg-offset-4">
-                            <a href="index"  class="btn btn-default">Atr&aacute;s</a>
+                            <a href="lista"  class="btn btn-default">Atr&aacute;s</a>
                             <button type="reset" class="btn btn-danger" >Cancelar</button>
                             <button type="submit" class="btn btn-primary">Agregar</button>
                         </div>
@@ -75,116 +68,195 @@
                 </form>
             </div>
         <?php } ?>
-         <?php if ($G->act == 'editar') { ?>
-            <div class="box-body">
-                <form id="frmreg" method="post" class="form-horizontal" action="opcion">
-                    <div class="col-lg-8">
-                        <div class="form-group form-group-sm">
-                            <label for="nombres" class="col-lg-2 control-label">Nombres</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ingrese nombres" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="apellidos" class="col-lg-2 control-label">Apellidos</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Ingrese apellidos" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="nick" class="col-lg-2 control-label">Nickname</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="nick" name="nick" placeholder="Ingrese nickname" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="pass" class="col-lg-2 control-label">Contrase&ntilde;a</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="pass" name="pass" placeholder="Ingrese contrase&ntilde;a"  pattern="[0-9.]{1,9}" data-valid-min="1" required>
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label for="sesion" class="col-lg-2 control-label">Sesi&oacute;n</label>
-                            <div class="col-lg-4">
-                                <input type="text" class="form-control" id="sesion" name="sesion"  disabled>
-                            </div>
-                            <label for="tipo" class="col-lg-2 control-label">Tipo</label>
-                            <div class="col-lg-4">
-                                <select id="tipo" name="tipo"  class="form-control">
-                                    <option value="1">Administrador</option>
-                                    <option value="3">Participante</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <div class="col-lg-6 col-lg-offset-4">
-                            <a href="index"  class="btn btn-default">Atr&aacute;s</a>
-                            <button type="reset" class="btn btn-danger" >Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Agregar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        <?php } ?>
-        <?php if ($G->act == 'lista') { ?>
-        <div class='table-responsive'>
-            <table class="table table-hover" id="tblDatos">
-                <thead>
-                    <tr>
-                        <th style='text-align: center'>#</th>
-                        <th style='text-align: center'>NOMBRES</th>
-                        <th style='text-align: center'>APELLIDOS</th>
-                        <th style='text-align: center'>NICKNAME</th>
-                        <th style='text-align: center'>TIPO</th>
-                        <th style='text-align: center'>ESTADO</th>
-                        <th spancol="2" style='text-align: center'>ACCION</th>
-                    </tr>
-                </thead>
-                <tbody style='text-align: center' >
-                       <?php
+        <?php
+        if ($G->act == 'editar') {
+            if (!empty($G->usuariosEditar)) {
 
+                foreach ($G->usuariosEditar as $usuario) {
+
+                    $usuario['u_id'];
+                    $usuario['u_nombres'];
+                    $usuario['u_apellidos'];
+                    $usuario['u_nick'];
+                    $usuario['u_tipo'];
+                    $usuario['u_sesion'];
+                }
+                ?>
+                <div class="box-body">
+                    <form id="frmreg" method="post" class="form-horizontal" action="editar">
+                        <div class="col-lg-8">
+                            <div class="form-group form-group-sm">
+                                <label for="nombres" class="col-lg-2 control-label">Nombres</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ingrese nombres"  value="<?php echo $usuario["u_nombres"]; ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="apellidos" class="col-lg-2 control-label">Apellidos</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Ingrese apellidos"  value="<?php echo $usuario['u_apellidos']; ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="nick" class="col-lg-2 control-label">Nickname</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="nick" name="nick" placeholder="Ingrese nickname" value="<?php echo $usuario['u_nick'] ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="pass" class="col-lg-2 control-label">Contrase&ntilde;a</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="pass" name="pass" placeholder="Ingrese contrase&ntilde;a"  pattern="[0-9.]{1,9}" data-valid-min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label for="sesion" class="col-lg-2 control-label">Sesi&oacute;n</label>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control" id="sesion" name="sesion" value="<?php echo $usuario["u_sesion"] == 1 ? "Conectado" : "No conectado"; ?>" disabled>
+                                </div>
+                                <label for="tipo" class="col-lg-2 control-label">Tipo</label>
+                                <div class="col-lg-4">
+                                    <select id="tipo" name="tipo"  class="form-control">
+                                        <option value="1" <?php
+                                        if ($usuario['u_tipo'] == 1) {
+                                            echo "selected";
+                                        }
+                                        ?>>Administrador</option>
+                                        <option value="3" <?php
+                                        if ($usuario['u_tipo'] == 3) {
+                                            echo "selected";
+                                        }
+                                        ?>>Participante</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="col-lg-6 col-lg-offset-4">
+                                <a href="lista"  class="btn btn-default">Atr&aacute;s</a>
+                                <button type="reset" class="btn btn-danger" >Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Editar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <?php
+            }
+        }
+        ?>
+        <?php if ($G->act == 'lista') { ?>
+                    <script>
+                var datos=[ 'lista','#resultado','#tblDatos'];
+            </script>
+            <script src="<?php echo $G->config["w_url"] . DS . "app" . DS . "media" . DS . "js" . DS . "tiempo_real.js" ?>" type="text/javascript"></script>
+            <div class='table-responsive' id="resultado">
+                <table class="table table-hover" id="tblDatos">
+                    <thead>
+                        <tr>
+                            <th style='text-align: center'>#</th>
+                            <th style='text-align: center'>NOMBRES</th>
+                            <th style='text-align: center'>APELLIDOS</th>
+                            <th style='text-align: center'>NICKNAME</th>
+                            <th style='text-align: center'>TIPO</th>
+                            <th style='text-align: center'>ESTADO</th>
+                            <th spancol="2" style='text-align: center'>ACCION</th>
+                        </tr>
+                    </thead>
+                    <tbody style='text-align: center' >
+                        <?php
                         if (!empty($G->usuarios)) {
 
-                            foreach ($G->usuarios as $usuario){
+                            foreach ($G->usuarios as $usuario) {
                                 ?>
-                                <tr class='<?php echo $usuario["u_sesion"]==1 ? "success" : "default";?>'>
+                                <tr class='<?php echo $usuario["u_sesion"] == 1 ? "success" : "default"; ?>'>
                                     <td><?php echo $usuario["u_id"] ?></td>
                                     <td><?php echo $usuario["u_nombres"] ?></td>
                                     <td><?php echo $usuario["u_apellidos"] ?></td>
                                     <td><?php echo $usuario["u_nick"] ?></td>
-                                    
-                                    <td><span class='label label-<?php echo $usuario["u_tipo"]==1 ? "danger" : "primary";?>'><?php echo $usuario["u_tipo"]==1 ? "Admininistrador" : "Participante";?></span></td>
+
+                                    <td><span class='label label-<?php echo $usuario["u_tipo"] == 1 ? "danger" : "primary"; ?>'><?php echo $usuario["u_tipo"] == 1 ? "Admininistrador" : "Participante"; ?></span></td>
                                     <td><?php echo $usuario["u_sesion"] ?></td>
-                                    <td><?php echo "<a href='editar?id=".$usuario['u_id']."' class='btn btn-warning'> Editar</a>" ?>
-                                    <?php echo "<a href='eliminar?id=".$usuario['u_id']."' class='btn btn-danger'> Eliminar</a>" ?></td>
+                                    <td><?php echo "<a href='editar?id=" . $usuario['u_id'] . "' class='btn btn-warning'> Editar</a>" ?>
+                                        <a class="btn btn-danger" onclick="datos_id('<?php echo $usuario['u_id'] ?>', '<?php echo $usuario['u_nick'] ?>')" id="eliminar-usuario" data-toggle="modal"  data-target='#eliminar'>Eliminar</a></td>
                                 </tr>
-                               <?php
+                                <?php
                             }
+                        } else {
 
-                        } 
-                        else {
-
-                            echo "<tr class='alert alert-danger' >No se han encontrado registros.</tr>";
+                            echo "<tr class='alert alert-danger' ><td colspan='7'>No se han encontrado registros.</td></tr>";
                         }
                         ?>
-                 
-                </tbody>
-            </table> 
-        </div>
-            <!--<div id="paginador" class="btn btn-lg btn-primary"></div>-->
-         <!--   <script type="text/javascript">
-                // var p = new Paginador(document.getElementById('paginador'), document.getElementById('tblDatos'), 10);
-                // p.Mostrar();
-            </script>
-         -->
-         <!--
-            <h3>
-                <!--<small>Lista <span class="label label-danger">Total de registros: <%out.println(totalElementos);%></span></small>-->
-            <!--</h3>
-            <!--ul class="pagination">
-        </ul-->
-            
+
+                    </tbody>
+                </table> 
+            </div>
         <?php } ?>
     </div>
+<!-- MODAL ELIMINAR LENGUAJES-->
+            <div class="modal fade" id="eliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Eliminar Usuario</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group form-group-sm">
+                                <label>Usuario a eliminar</label>
+                                <input type="hidden"  class="form-control"   name="id-usuario-hidden" id="id-usuario-hidden">
+                                <input type="text"  class="form-control"  name="nick-modal" id="nick-modal" disabled></div>
+                            <div id="estado_eliminar"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"  class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary" id="botonEliminar">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIN MODAL ELIMINAR LENGUAJES-->
+            <script type="text/javascript">
+                function ocultar_mensaje() {
+                    $('#estado_eliminar').html('<div></div>');
+                }
+                function datos_id(id, nick) {
+                    $('#nick-modal').val(nick);
+                    $('#id-usuario-hidden').val(id);
+                     $('#estado_eliminar').html("");
+                }
+                $('#botonEliminar').on('click', function () {
+                    $.ajax({
+                        method: 'POST',
+                        url: '/PlataformaRanking/usuarios/eliminar',
+                        data: {
+                            id: $('#id-usuario-hidden').val(),
+                            accion: 'eliminar'
+                        },
+                        success: function (response) {
+                            var mensaje;
+                            console.log(response);
+                            switch (response) {
+                                case '1':
+                                    mensaje = "<div class='alert alert-success'>Usuario eliminado.<br>Cierre la ventana y verifique</div>";
+                                    break;
+                                case '2':
+                                    mensaje = "<div class='alert alert-danger'><strong>No existe lenguaje</strong></div>";
+                                    break;
+                                case '3':
+                                    mensaje = "<div class='alert alert-danger'><strong>Seleccione lenguaje</strong> </div>";
+                                    break;
+                                default:
+                                    mensaje = "<div class='alert alert-danger'><strong>Error intente de nuevo</strong> </div>";
+                                    break;
+                            }
+                            $("#resultado").load('lista #tblDatos');
+                            $("#resultado").trigger("chosen:updated");
+                            $('#estado_eliminar').html(mensaje);
+                            $('#nick-modal').val('');
+                            $('#id-usuario-hidden').val('');
+                        }
+                    });
+                });
+            </script>
 </section>
